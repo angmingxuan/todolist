@@ -9,12 +9,13 @@ const configMissing =
   !SUPABASE_URL || SUPABASE_URL === 'YOUR_SUPABASE_URL' ||
   !SUPABASE_ANON || SUPABASE_ANON === 'YOUR_SUPABASE_ANON_KEY';
 
-let supabase = null;
+let db = null;
 
 if (configMissing) {
   document.getElementById('config-warning').classList.remove('hidden');
 } else {
-  supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
+  db = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
+  console.log('Supabase client created:', !!db);
 }
 
 // --- State ------------------------------------------------
@@ -53,10 +54,10 @@ function setLoading(visible) {
 // --- Database functions -----------------------------------
 
 async function fetchTasks() {
-  if (!supabase) return;
+  if (!db) return;
   clearError();
   setLoading(true);
-  const { data, error } = await supabase
+  const { data, error } = await db
     .from('tasks')
     .select('*')
     .order('created_at', { ascending: true });
@@ -67,9 +68,9 @@ async function fetchTasks() {
 }
 
 async function addTask(title) {
-  if (!supabase) return;
+  if (!db) return;
   clearError();
-  const { data, error } = await supabase
+  const { data, error } = await db
     .from('tasks')
     .insert([{ title, completed: false }])
     .select()
@@ -80,9 +81,9 @@ async function addTask(title) {
 }
 
 async function toggleTask(id, completed) {
-  if (!supabase) return;
+  if (!db) return;
   clearError();
-  const { error } = await supabase
+  const { error } = await db
     .from('tasks')
     .update({ completed })
     .eq('id', id);
@@ -92,9 +93,9 @@ async function toggleTask(id, completed) {
 }
 
 async function deleteTask(id) {
-  if (!supabase) return;
+  if (!db) return;
   clearError();
-  const { error } = await supabase
+  const { error } = await db
     .from('tasks')
     .delete()
     .eq('id', id);
@@ -104,11 +105,11 @@ async function deleteTask(id) {
 }
 
 async function clearCompleted() {
-  if (!supabase) return;
+  if (!db) return;
   clearError();
   const ids = tasks.filter(t => t.completed).map(t => t.id);
   if (ids.length === 0) return;
-  const { error } = await supabase
+  const { error } = await db
     .from('tasks')
     .delete()
     .in('id', ids);
