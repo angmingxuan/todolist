@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Task Manager</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>Task Manager</h1>
+      <p class="subtitle">Powered by Supabase</p>
+    </header>
+
+    <div id="config-warning" class="warning hidden">
+      <strong>Setup required:</strong> Open <code>config.js</code> and add your Supabase URL and anon key.
+      See <code>README.md</code> for instructions.
+    </div>
+
+    <form id="task-form">
+      <input
+        type="text"
+        id="task-input"
+        placeholder="Add a new task..."
+        autocomplete="off"
+        required
+      />
+      <button type="submit">Add</button>
+    </form>
+
+    <div class="filters">
+      <button class="filter-btn active" data-filter="all">All</button>
+      <button class="filter-btn" data-filter="active">Active</button>
+      <button class="filter-btn" data-filter="completed">Completed</button>
+    </div>
+
+    <div id="loading" class="loading hidden">Loading tasks...</div>
+    <div id="error-msg" class="error hidden"></div>
+
+    <ul id="task-list"></ul>
+
+    <footer id="task-footer" class="hidden">
+      <span id="task-count"></span>
+      <button id="clear-completed">Clear completed</button>
+    </footer>
+  </div>
+
+  <!-- Supabase client via CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="config.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
